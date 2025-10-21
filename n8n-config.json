@@ -1,0 +1,313 @@
+{
+  "name": "RAG Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Add your file here",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "File",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "455c5c76-8827-4775-b081-b88d52538a5d",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [96, 48],
+      "webhookId": "4e1e20d4-f759-42c8-8439-87b93f43aa7c",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b-instruct-fp16"
+      },
+      "id": "c3f2a147-65c9-4a6a-90bc-251f37cb6947",
+      "name": "Embeddings Ollama",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "position": [208, 432],
+      "typeVersion": 1,
+      "credentials": {
+        "ollamaApi": {
+          "id": "y63haUxWkms653Mi",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "loader": "pdfLoader",
+        "options": {}
+      },
+      "id": "666377ee-93e1-4f45-b7bb-4cce406ab4a9",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [384, 432],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 50,
+        "options": {}
+      },
+      "id": "0c5b266f-5d66-48dd-a248-74cf5fabb69c",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [384, 592],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Data Ingestion\n**Add data to the semantic database",
+        "height": 828,
+        "width": 600,
+        "color": 3
+      },
+      "id": "a44af07f-1143-4bd5-8287-576c5c0f76c5",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [80, -48],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3e60e39c-1c28-4145-b061-7e79a37c1a89",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [752, 48],
+      "webhookId": "5e56a263-3a40-44bd-bc9d-1cfb3bc2a87d",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant. You have access to a tool to retrieve data from a semantic database to answer questions. Always provide arguments when you execute the tool"
+        }
+      },
+      "id": "c235b2af-6058-4a29-a8d3-64feeecb5abe",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [1040, 48],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b-instruct-fp16",
+        "options": {}
+      },
+      "id": "fe35afc4-fb87-4d56-adfa-5fec830b5c18",
+      "name": "Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "position": [880, 288],
+      "typeVersion": 1,
+      "credentials": {
+        "ollamaApi": {
+          "id": "y63haUxWkms653Mi",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "cdeef3d7-7606-4ad0-b25a-ccca912038f2",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [1072, 288],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b-instruct-fp16"
+      },
+      "id": "e90b0ff7-d18d-4f84-8a07-0df164135ecc",
+      "name": "Embeddings Ollama1",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "position": [1216, 480],
+      "typeVersion": 1,
+      "credentials": {
+        "ollamaApi": {
+          "id": "y63haUxWkms653Mi",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## RAG Chatbot\n**Chat with your data",
+        "height": 700,
+        "width": 800,
+        "color": 4
+      },
+      "id": "4b9481a2-c5e9-4064-ba62-2e11a6db534c",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [704, -48],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [272, 176],
+      "id": "ec133dcf-9335-4898-a258-bb1b73ac6a9d",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "aPH29UBypqCitHW0",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "PgVector extension",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [1216, 288],
+      "id": "58b14b49-fc39-402a-bdf0-8c3706ad778d",
+      "name": "Postgres PGVector Store1",
+      "credentials": {
+        "postgres": {
+          "id": "aPH29UBypqCitHW0",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [736, 672],
+      "typeVersion": 1,
+      "id": "ece82057-943c-4dcb-a686-440da5b05c4d",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "60e2441c-a1d7-40cb-990a-d5823c1090fb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e821603d8ca70c02a3d558fe55b86371d710a7e28acead0ca96e76ff16cdd6d"
+  },
+  "id": "6Ld8FjRJk2mJwUJR",
+  "tags": []
+}
