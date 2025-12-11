@@ -5,7 +5,7 @@ graph TB
         B --> C[Structured Prompts]
         C --> D[LLM - Granite,OpenAI Gov, etc]:::yellow
     end
-    
+
     subgraph RP[RAG Pipeline]
         A --> E[Query Preprocessing]
         E --> G[Similarity Search]
@@ -13,43 +13,41 @@ graph TB
         H --> HA["**Re-rank responses** (automated by model, inspect manually)"]:::yellow
         HA --> D
     end
-    
+
     subgraph "LLM Core"
         D --> I[Token Generation]
         I --> J[Initial Response]
     end
-    
+
     subgraph "Evaluation Methods"
         J --> K{Evaluation}
-        K --> L[Exact Match]
+        K --> L["**Procedural Eval** (Exact Match, ROUGE)"]:::green
         K --> M[Semantic Similarity]:::green
-        K --> N[BLEU/ROUGE]
         K --> O[Human Feedback - RLHF]:::green
         K --> P[Model-Based Eval - LLM judge]:::green
 
     end
-    
+
     subgraph "Improvement Techniques"
         O --> Q[RLHF Process]
         Q --> R[Reward Model]
         R --> S[PPO Training]
         S --> T[❌ Fine-tuned Model]:::red
-        
+
         L --> U[Error Analysis]
         M --> U
-        N --> U
         P --> U
-        
+
         U --> V[Prompt Iteration]
         V --> B
-        
+
         U --> W[Context Enhancement]
         W --> HA
-        
+
         U --> X[Model Fine-tuning]
         X --> D
     end
-    
+
     subgraph VD[Vector Database Components]
         Y["**Embedding params** (dimensions, chunk/window size, overlap)"]:::yellow
         AF[Embedding model variants]
@@ -58,7 +56,7 @@ graph TB
         AF --> Z
 	      AA --> Z
     end
-    
+
     subgraph "Monitoring"
         J --> AB[Langfuse Tracing]
         AB --> AC[Performance Metrics]
@@ -66,7 +64,7 @@ graph TB
         AD --> AE[Quality Scores - precision, faithfulness, factuality]:::yellow
         AE --> K
     end
-    
+
     T --> D
     V -.-> C
     RP -.- VD
