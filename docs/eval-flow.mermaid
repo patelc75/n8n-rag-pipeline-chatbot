@@ -1,0 +1,74 @@
+graph TB
+    subgraph "Input Processing"
+        A[User Query] --> B[Prompt Engineering]
+        B --> C[Structured Prompts]
+        C --> D[LLM - Granite,OpenAI Gov, etc]:::yellow
+    end
+
+    subgraph "RAG Pipeline"
+        A --> E[Query Preprocessing]
+        E --> F[Vector Database]
+        F --> G[Similarity Search]
+        G --> H[Retrieved Context]
+        H --> HA[Re-rank responses - how???]:::yellow
+        HA --> D
+    end
+
+    subgraph "LLM Core"
+        D --> I[Token Generation]
+        I --> J[Initial Response]
+    end
+
+    subgraph "Evaluation Methods"
+        J --> K{Evaluation}
+        K --> L[Exact Match]
+        K --> M[Semantic Similarity]:::green
+        K --> N[BLEU/ROUGE]
+        K --> O[Human Feedback - RLHF]:::green
+        K --> P[Model-Based Eval - LLM judge]:::green
+
+    end
+
+    subgraph "Improvement Techniques"
+        O --> Q[RLHF Process]
+        Q --> R[Reward Model]
+        R --> S[PPO Training]
+        S --> T[Fine-tuned Model]
+
+        L --> U[Error Analysis]
+        M --> U
+        N --> U
+        P --> U
+
+        U --> V[Prompt Iteration]
+        V --> B
+
+        U --> W[Context Enhancement]
+        W --> F
+
+        U --> X[Model Fine-tuning]
+        X --> D
+    end
+
+    subgraph "Vector Database Components"
+        F --> Y[Embeddings - dimensions, chunk/window size, overlap]:::yellow
+        F --> AF[Embedding model variants]:::yellow
+        Y --> Z[ElasticSearch or pgVector]
+        AF --> Z
+        Z --> AA[Indexing - M, ef_construction,ef_search]:::yellow
+        AA --> G
+    end
+
+    subgraph "Monitoring"
+        J --> AB[Langfuse Tracing]
+        AB --> AC[Performance Metrics]
+        AC --> AD[Cost Analysis]
+        AD --> AE[Quality Scores - precision, faithfulness, factuality]:::yellow
+        AE --> K
+    end
+
+    T --> D
+    V -.-> C
+    W -.-> H
+		classDef yellow fill:#D4C5A0,color:#000000
+		classDef green fill:#D4E7D4,color:#000000
